@@ -10,9 +10,9 @@ import pandas as pd
 import random
 import re
 from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_ollama import ChatOllama
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 from tqdm import tqdm
 from constants import DATA_PATH, TESTSET_CSV_PATH
 

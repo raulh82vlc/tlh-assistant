@@ -1,5 +1,6 @@
 torch
 langchain
+langchain-text-splitters
 langchain-community
 langchain-huggingface
 langchain-ollama

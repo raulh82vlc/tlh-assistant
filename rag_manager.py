@@ -9,8 +9,9 @@
 from langchain_ollama import ChatOllama
 from langchain_qdrant import QdrantVectorStore
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain.chains import RetrievalQA
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.output_parsers import StrOutputParser
 from qdrant_client import QdrantClient
 import torch
 from constants import DB_PATH, COLLECTION_NAME
@@ -62,13 +63,23 @@ def run_rag():
         input_variables=["context", "question"]
     )
 
-    # RAG Chain
-    qa_chain = RetrievalQA.from_chain_type(
-        llm=llm,
-        chain_type="stuff",
-        retriever=doc_store.as_retriever(search_kwargs={"k": 6}),
-        return_source_documents=True,
-        chain_type_kwargs={"prompt": prompt}
+    retriever = doc_store.as_retriever(search_kwargs={"k": 6})
+
+    def format_docs(docs):
+        return "\n\n".join(doc.page_content for doc in docs)
+
+    lcel_chain = (
+        {"context": retriever | format_docs, "question": RunnablePassthrough()}
+        | prompt
+        | llm
+        | StrOutputParser()
     )
 
-    return qa_chain
+    class RAGChain:
+        def invoke(self, inputs):
+            query = inputs["query"]
+            source_documents = retriever.invoke(query)
+            result = lcel_chain.invoke(query)
+            return {"result": result, "source_documents": source_documents}
+
+    return RAGChain()
