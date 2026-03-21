@@ -10,15 +10,22 @@ Retrieval-Augmented Generation (RAG) system for the TLH assistant. [TLH demo](ht
 
 ```
 RAG/
-├── data/                    # Source PDFs (documents to vectorize)
-├── qdrant_db/              # Qdrant vector database
-│   └── collection/
-│       └── tlh_rag/
-├── feed_db_docs.py         # OFFLINE PROCESS - PDF vectorization
-├── TLH_assistant.py        # Assistant Streamlit interface
-├── rag_manager.py          # RAG system management
-├── generate_testset.py     # Test dataset generation
-└── evaluate_ragas.py       # Evaluation with RAGAS
+├── data/                      # Source PDFs (documents to vectorize)
+├── qdrant_db/                 # Qdrant vector database
+├── src/
+│   └── rag_system/
+│       ├── settings.py        # Shared paths and model settings
+│       ├── embeddings.py      # Embedding builder and device resolution
+│       ├── ingestion.py       # Offline PDF vectorization logic
+│       ├── rag_manager.py     # Retrieval + generation orchestration
+│       ├── streamlit_app.py   # Streamlit UI implementation
+│       ├── testset_generation.py
+│       └── ragas_evaluation.py
+├── feed_db_docs.py            # CLI wrapper (offline vectorization)
+├── TLH_assistant.py           # CLI wrapper (Streamlit app)
+├── rag_manager.py             # Compatibility wrapper
+├── generate_testset.py        # CLI wrapper (testset generation)
+└── evaluate_ragas.py          # CLI wrapper (RAGAS evaluation)
 ```
 
 ## Main Scripts
@@ -81,6 +88,26 @@ make install   # create .venv and install dependencies
 make feed      # build vector database from PDFs
 make run       # start Streamlit assistant
 ```
+
+### Optional local `.env` configuration
+
+You can customize the Makefile behavior by creating a local `.env` file:
+
+```bash
+cp .env.example .env
+```
+
+Example variables:
+
+```bash
+PYTHONUNBUFFERED=1
+VENV_DIR=.venv
+MAIN_SCRIPT=TLH_assistant.py
+```
+
+- `PYTHONUNBUFFERED=1`: forces immediate Python log flushing.
+- `VENV_DIR`: virtual environment folder used by `make venv/install/run/...`.
+- `MAIN_SCRIPT`: Streamlit entry file used by `make run`.
 
 Other useful commands:
 

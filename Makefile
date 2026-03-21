@@ -1,5 +1,12 @@
-PYTHON := .venv/bin/python
-PIP := .venv/bin/pip
+-include .env
+
+VENV_DIR ?= .venv
+PYTHON ?= $(VENV_DIR)/bin/python
+PIP ?= $(VENV_DIR)/bin/pip
+MAIN_SCRIPT ?= TLH_assistant.py
+PYTHONUNBUFFERED ?= 1
+
+export PYTHONUNBUFFERED
 
 .PHONY: help venv install feed run testset evaluate clean
 
@@ -14,7 +21,7 @@ help:
 	@echo "  make clean     - Remove generated artifacts"
 
 venv:
-	python3 -m venv .venv
+	python3 -m venv $(VENV_DIR)
 	$(PIP) install --upgrade pip
 
 install: venv
@@ -24,7 +31,7 @@ feed:
 	$(PYTHON) feed_db_docs.py
 
 run:
-	$(PYTHON) -m streamlit run TLH_assistant.py
+	$(PYTHON) -m streamlit run $(MAIN_SCRIPT)
 
 testset:
 	$(PYTHON) generate_testset.py

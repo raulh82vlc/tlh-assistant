@@ -6,13 +6,17 @@
 # You are free to share and adapt this file under the terms of the CC BY-SA 4.0 license.
 # Full license: https://creativecommons.org/licenses/by-sa/4.0/legalcode
 
-from pathlib import Path
+from src.rag_system.settings import (
+	BASE_DIR,
+	COLLECTION_NAME,
+	DATA_PATH,
+	DB_PATH,
+	RAGAS_REPORT_CSV_PATH,
+	TESTSET_CSV_PATH,
+)
 
-BASE_DIR = Path(__file__).resolve().parent
-
-DATA_PATH = str(BASE_DIR / "data")
-DB_PATH = str(BASE_DIR / "qdrant_db")
-COLLECTION_NAME = "tlh_rag"
-
-TESTSET_CSV_PATH = str(BASE_DIR / "rag_testset.csv")
-RAGAS_REPORT_CSV_PATH = str(BASE_DIR / "ragas_full_report.csv")
+# Backward-compatible string exports for legacy imports.
+DATA_PATH = str(DATA_PATH)
+DB_PATH = str(DB_PATH)
+TESTSET_CSV_PATH = str(TESTSET_CSV_PATH)
+RAGAS_REPORT_CSV_PATH = str(RAGAS_REPORT_CSV_PATH)
