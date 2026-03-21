@@ -20,6 +20,7 @@ from ragas.metrics import (
 )
 from ragas.llms import LangchainLLMWrapper
 from ragas.embeddings import LangchainEmbeddingsWrapper
+from constants import TESTSET_CSV_PATH, RAGAS_REPORT_CSV_PATH
 
 judge_llm = ChatOllama(model="llama3", temperature=0)
 evaluator_llm = LangchainLLMWrapper(judge_llm)
@@ -33,9 +34,9 @@ evaluator_embeddings = LangchainEmbeddingsWrapper(hf_embeddings)
 def run_evaluation():
     print("Cargando dataset de prueba...")
     try:
-        test_df = pd.read_csv("rag_testset.csv")
+        test_df = pd.read_csv(TESTSET_CSV_PATH)
     except FileNotFoundError:
-        print("No encuentro 'rag_testset.csv'. Ejecuta primero generate_testset.py")
+        print(f"No encuentro '{TESTSET_CSV_PATH}'. Ejecuta primero generate_testset.py")
         return
 
     chain = run_rag()
@@ -73,10 +74,10 @@ def run_evaluation():
     )
 
     df_scores = scores.to_pandas()
-    df_scores.to_csv("ragas_full_report.csv", index=False)
+    df_scores.to_csv(RAGAS_REPORT_CSV_PATH, index=False)
     print("\nResultados:")
     print(df_scores[['user_input', 'factual_correctness', 'faithfulness', 'context_recall']].head())
-    print("Reporte guardado en ragas_full_report.csv")
+    print(f"Reporte guardado en {RAGAS_REPORT_CSV_PATH}")
 
 
 if __name__ == "__main__":

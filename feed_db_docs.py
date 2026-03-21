@@ -16,10 +16,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from qdrant_client import QdrantClient
 from langchain_qdrant import QdrantVectorStore
 from qdrant_client.models import Distance, VectorParams
-
-DATA_PATH = './data'
-DB_PATH = './qdrant_db'
-COLLECTION_NAME = 'tlh_rag'
+from constants import DATA_PATH, DB_PATH, COLLECTION_NAME
 
 
 def feed_vector_db_with_docs():

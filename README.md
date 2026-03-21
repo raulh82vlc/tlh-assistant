@@ -1,106 +1,108 @@
-<!--
-  Copyright (c) 2025 Raul Hernandez Lopez
-
-  This file is part of the project and is licensed under the
-  Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0).
-
-  You are free to share and adapt this file under the terms of the CC BY-SA 4.0 license.
-  Full license: https://creativecommons.org/licenses/by-sa/4.0/legalcode
--->
-
 # RAG System - TLH Assistant
+```
+@Author: Raul Hernandez Lopez.
+```
+[raulh82vlc's GitHub](https://github.com/raulh82vlc)
 
-Sistema de Recuperación Aumentada por Generación (RAG) para el asistente TLH. [TLH demo](https://www.youtube.com/watch?v=AVxlBk3FwV0)
+Retrieval-Augmented Generation (RAG) system for the TLH assistant. [TLH demo](https://www.youtube.com/watch?v=AVxlBk3FwV0)
 
-## Estructura de Directorios
+## Directory Structure
 
 ```
 RAG/
-├── data/                    # PDFs fuente (documentos a vectorizar)
-├── qdrant_db/              # Base de datos vectorial Qdrant
+├── data/                    # Source PDFs (documents to vectorize)
+├── qdrant_db/              # Qdrant vector database
 │   └── collection/
 │       └── tlh_rag/
-├── feed_db_docs.py         # PROCESO OFFLINE - Vectorización de PDFs
-├── TLH_assistant.py        # Interfaz Streamlit del asistente
-├── rag_manager.py          # Gestión del sistema RAG
-├── generate_testset.py     # Generación del dataset de pruebas
-└── evaluate_ragas.py       # Evaluación con RAGAS
+├── feed_db_docs.py         # OFFLINE PROCESS - PDF vectorization
+├── TLH_assistant.py        # Assistant Streamlit interface
+├── rag_manager.py          # RAG system management
+├── generate_testset.py     # Test dataset generation
+└── evaluate_ragas.py       # Evaluation with RAGAS
 ```
 
-## Scripts Principales
+## Main Scripts
 
-### `feed_db_docs.py` - PASO MÁS IMPORTANTE
-Proceso offline de vectorización de documentos.
+### `feed_db_docs.py` - MOST IMPORTANT STEP
+Offline document vectorization process.
 
-Este script:
-- Lee los PDFs de la carpeta `data/`
-- Procesa y divide los documentos en chunks
-- Genera embeddings vectoriales
-- Almacena los vectores en la base de datos Qdrant
+This script:
+- Reads PDFs from the `data/` folder
+- Processes and splits documents into chunks
+- Generates vector embeddings
+- Stores vectors in the Qdrant database
 
-Ejecutar primero antes de usar el sistema RAG.
+Run this first before using the RAG system.
 
 ### `TLH_assistant.py`
-Interfaz del asistente con Streamlit.
-> streamlit run TLH_assistant.py
+Assistant interface built with Streamlit.
+> make run
 
 ### `rag_manager.py`
-Módulo principal que gestiona:
-- Conexión con la base de datos vectorial
-- Búsqueda de documentos similares
-- Integración con el modelo LLM
-- Generación de respuestas
+Main module that handles:
+- Connection to the vector database
+- Similar document retrieval
+- Integration with the LLM model
+- Response generation
 
 ### `generate_testset.py`
-Genera el dataset de pruebas (testset) para evaluación.
+Generates the evaluation test dataset (testset).
 
-Ejecutar antes de evaluar con RAGAS.
+Run this before evaluating with RAGAS.
 
 ### `evaluate_ragas.py`
-Evalúa el rendimiento del sistema RAG utilizando el framework RAGAS.
+Evaluates RAG system performance using the RAGAS framework.
 
-Prerrequisito: Generar el testset primero con `generate_testset.py`
+Prerequisite: Generate the testset first with `make testset`
 
-## Flujo de Trabajo
+## Workflow
 
-1. Vectorización (Offline)
-   - Colocar PDFs en `data/`
-   - Ejecutar `feed_db_docs.py`
+1. Vectorization (Offline)
+   - Place PDFs in `data/`
+   - Run `make feed`
 
-2. Uso del Asistente (Online en localhost)
-   - Ejecutar `TLH_assistant.py` con Streamlit
+2. Assistant Usage (Online on localhost)
+   - Run `make run`
 
-3. Evaluación (Opcional)
-   - Generar testset: `generate_testset.py`
-   - Evaluar: `evaluate_ragas.py`
+3. Evaluation (Optional)
+   - Generate testset: `make testset`
+   - Evaluate: `make evaluate`
 
-## Requisitos Previos
+## Prerequisites
 
-- Documentos PDF de TLH en la carpeta `data/`
-- Dependencias Python instaladas, se necesitan las siguientes dependencias:
+- TLH PDF documents in the `data/` folder
+- GNU Make installed
+- Python 3 available as `python3`
+
+### Makefile hints (recommended)
+
 ```bash
-pip install torch
-pip install langchain
-pip install langchain-community
-pip install langchain-huggingface
-pip install langchain-ollama
-pip install langchain-qdrant
-pip install qdrant-client
-pip install sentence-transformers
-pip install pypdf
-pip install streamlit
-pip install pandas
-pip install ragas
-pip install tqdm
+make install   # create .venv and install dependencies
+make feed      # build vector database from PDFs
+make run       # start Streamlit assistant
 ```
 
-- Ollama instalado con el modelo `llama3`, pasos una vez instalado:
-    - `ollama pull llama3` - Descarga el modelo llama3
-    - `ollama list` - Verifica que el modelo está instalado
-    - `ollama run llama3` - Prueba el modelo interactivamente
-    - Nota: El servidor Ollama debe estar ejecutándose
-- Base de datos Qdrant (se crea automáticamente al ejecutar `feed_db_docs.py`)
+Other useful commands:
+
+```bash
+make testset   # generate evaluation dataset
+make evaluate  # run RAGAS evaluation
+make clean     # remove generated artifacts
+```
+
+- Ollama installed with the `llama3` model. Steps after installation:
+   - `ollama pull llama3` - Download the llama3 model
+   - `ollama list` - Verify the model is installed
+   - `ollama run llama3` - Test the model interactively
+   - Note: The Ollama server must be running
+- Qdrant database (created automatically when running `feed_db_docs.py`)
 
 ---
 
-Nota: La parte más crítica del sistema es la vectorización offline de documentos mediante `feed_db_docs.py`, ya que sin este paso la base de datos vectorial estará vacía y el RAG no funcionará.
+Note: The most critical part of the system is offline document vectorization via `feed_db_docs.py`. Without this step, the vector database will be empty and RAG will not work.
+
+## License
+
+This project is licensed under the **Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)**.
+
+See [LICENSE](LICENSE) for the full text and official links.

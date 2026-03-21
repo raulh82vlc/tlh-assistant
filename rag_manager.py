@@ -13,9 +13,7 @@ from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 from qdrant_client import QdrantClient
 import torch
-
-DB_PATH = './qdrant_db'
-COLLECTION_NAME = 'tlh_rag'
+from constants import DB_PATH, COLLECTION_NAME
 
 PROMPT_TEMPLATE = """Eres un asistente académico especializado en Tecnologías del Lenguaje Humano.
 Tu ÚNICA fuente de información es el contexto proporcionado abajo.

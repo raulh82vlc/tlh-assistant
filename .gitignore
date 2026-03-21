@@ -1,0 +1,7 @@
+main
+data/
+.venv/
+__pycache__/
+qdrant_db/
+rag_testset.csv
+ragas_full_report.csv

@@ -14,8 +14,8 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_ollama import ChatOllama
 from langchain.prompts import PromptTemplate
 from tqdm import tqdm
+from constants import DATA_PATH, TESTSET_CSV_PATH
 
-DATA_PATH = './data'
 NUM_TEST_SAMPLES = 10
 
 print("Cargando documentos...")
@@ -104,6 +104,6 @@ for chunk in tqdm(selected_chunks):
         print(f"Error: {e}")
 
 df = pd.DataFrame(data)
-df.to_csv("rag_testset.csv", index=False)
-print(f"\nDataset guardado: rag_testset.csv ({len(data)} preguntas)")
+df.to_csv(TESTSET_CSV_PATH, index=False)
+print(f"\nDataset guardado: {TESTSET_CSV_PATH} ({len(data)} preguntas)")
 print(df.head())
